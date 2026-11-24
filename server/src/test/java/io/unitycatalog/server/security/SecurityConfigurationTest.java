@@ -59,6 +59,7 @@ class SecurityConfigurationTest {
   // written to the configuration folder.
   @ParameterizedTest
   @CsvSource({
+    "directory, Not a regular file",
     "encrypted PKCS #8, is encrypted",
     "encrypted PKCS #1, is encrypted",
     "certificate only, No PRIVATE KEY PEM block",
@@ -69,6 +70,7 @@ class SecurityConfigurationTest {
     byte[] der = newKeyPair().getPrivate().getEncoded();
     Path privateKey = keyDirectory.resolve("signing.key");
     switch (problem) {
+      case "directory" -> Files.createDirectory(privateKey);
       case "encrypted PKCS #8" ->
           Files.writeString(privateKey, pem("ENCRYPTED PRIVATE" + " KEY", der));
       case "encrypted PKCS #1" ->
